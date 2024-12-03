@@ -20,6 +20,7 @@ class Entity
 		bool isSet;
     };
 
+
 protected:
     sf::CircleShape mShape;
     sf::Vector2f mDirection;
@@ -35,6 +36,7 @@ public:
 	void SetDirection(float x, float y, float speed = -1.f);
 	void SetSpeed(float speed) { mSpeed = speed; }
 	void SetTag(int tag) { mTag = tag; }
+	int GetTag() const { return mTag; }
 	float GetRadius() const { return mShape.getRadius(); }
 
     sf::Vector2f GetPosition(float ratioX = 0.5f, float ratioY = 0.5f) const;

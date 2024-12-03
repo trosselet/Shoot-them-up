@@ -1,25 +1,30 @@
 #include "pch.h"
 #include "SampleScene.h"
-
+#include <iostream>
 #include "DummyEntity.h"
-
+#include "Bullet.h"
 #include "Debug.h"
 
 void SampleScene::OnInitialize()
 {
 	pEntity1 = CreateEntity<DummyEntity>(100, sf::Color::Red);
 	pEntity1->SetPosition(100, 100);
+	
 
 	pEntity2 = CreateEntity<DummyEntity>(50, sf::Color::Green);
 	pEntity2->SetPosition(500, 500);
-
+	pEntity2->SetTag(ENNEMY);
 	pEntitySelected = nullptr;
+
+
+
+
 }
 
 void SampleScene::OnEvent(const sf::Event& event)
 {
-	if (event.type != sf::Event::EventType::MouseButtonPressed)
-		return;
+	//if (event.type != sf::Event::EventType::MouseButtonPressed)
+	//	return;
 
 	if (event.mouseButton.button == sf::Mouse::Button::Right)
 	{
@@ -32,6 +37,16 @@ void SampleScene::OnEvent(const sf::Event& event)
 		if (pEntitySelected != nullptr) 
 		{
 			pEntitySelected->GoToPosition(event.mouseButton.x, event.mouseButton.y, 100.f);
+		}
+	}
+	if (event.type == sf::Event::KeyPressed)
+	{
+		if (event.key.code == sf::Keyboard::Space)
+		{
+			pBullet = CreateEntity<Bullet>(10, sf::Color::Yellow);
+			pBullet->SetTag(BULLET);
+			pBullet->SetPosition(100 ,100);
+			std::cout << "Bullet created" << std::endl;
 		}
 	}
 }
@@ -52,3 +67,4 @@ void SampleScene::OnUpdate()
 		Debug::DrawCircle(position.x, position.y, 10, sf::Color::Blue);
 	}
 }
+

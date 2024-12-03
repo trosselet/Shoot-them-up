@@ -2,10 +2,7 @@
 
 #include <list>
 
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/Text.hpp>
-
-class Entity;
+class SFMLEntity;
 class Scene;
 class Debug;
 
@@ -15,11 +12,11 @@ namespace sf
 	class Event;
 }
 
-class GameManager
+class GameManager : public IGraphicEngine
 {
-	std::list<Entity*> mEntities;
-	std::list<Entity*> mEntitiesToDestroy;
-	std::list<Entity*> mEntitiesToAdd;
+	std::list<SFMLEntity*> mEntities;
+	std::list<SFMLEntity*> mEntitiesToDestroy;
+	std::list<SFMLEntity*> mEntitiesToAdd;
 
 	sf::RenderWindow* mpWindow;
 	sf::Font mFont;
@@ -34,11 +31,11 @@ class GameManager
 private:
 	GameManager();
 
-	void Run();
+	void Run() override;
 	
-	void HandleInput();
+	void HandleInput() override;
 	void Update();
-	void Draw();
+	void Draw() override;
 
 	void SetDeltaTime(float deltaTime) { mDeltaTime = deltaTime; }
 
@@ -48,7 +45,7 @@ public:
 	~GameManager();
 	static GameManager* Get();
 
-	void CreateWindow(unsigned int width, unsigned int height, const char* title, int fpsLimit = 60);
+	void Initialize(unsigned int width, unsigned int height, const std::string& title) override;
 
 	template<typename T>
 	void LaunchScene();

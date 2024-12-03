@@ -1,9 +1,9 @@
 #pragma once
-#include "Entity.h"
+#include "SFMLEntity.h"
 
-class DummyEntity : public Entity
+class DummyEntity : public SFMLEntity
 {
 public:
-	void OnCollision(Entity* other) override;
+	void OnCollision(SFMLEntity* other) override;
 };
 

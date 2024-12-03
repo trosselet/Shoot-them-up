@@ -22,7 +22,7 @@ protected:
 
 public:
 	template<typename T>
-	T* CreateEntity(float radius, const sf::Color& color);
+	T* CreateSFMLEntity(float radius, int r, int g, int b, int a);
 
 	float GetDeltaTime() const;
 

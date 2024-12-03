@@ -2,19 +2,19 @@
 
 #include "Scene.h"
 #include "GameManager.h"
-#include "Entity.h"
+#include "SFMLEntity.h"
 
 template<typename T>
-T* Scene::CreateEntity(float radius, const sf::Color& color)
+T* Scene::CreateSFMLEntity(float radius, int r, int g, int b, int a)
 {
-	static_assert(std::is_base_of<Entity, T>::value, "T must be derived from Entity");
+	static_assert(std::is_base_of<SFMLEntity, T>::value, "T must be derived from SFMLEntity");
 
-	T* newEntity = new T();
+	T* newSFMLEntity = new T();
 
-	Entity* entity = newEntity;
-	entity->Initialize(radius, color);
+	SFMLEntity* SFMLEntity = newSFMLEntity;
+	SFMLEntity->Initialize(radius, r, g, b, a);
 	
-	mpGameManager->mEntitiesToAdd.push_back(newEntity);
+	mpGameManager->mEntitiesToAdd.push_back(newSFMLEntity);
 
-	return newEntity;
+	return newSFMLEntity;
 }

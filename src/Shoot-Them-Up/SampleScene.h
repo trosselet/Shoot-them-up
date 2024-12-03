@@ -6,13 +6,13 @@ class DummyEntity;
 
 class SampleScene : public Scene
 {
-	DummyEntity* pEntity1;
-	DummyEntity* pEntity2;
+	DummyEntity* pSFMLEntity1;
+	DummyEntity* pSFMLEntity2;
 
-	DummyEntity* pEntitySelected;
+	DummyEntity* pSFMLEntitySelected;
 
 private:
-	void TrySetSelectedEntity(DummyEntity* pEntity, int x, int y);
+	void TrySetSelectedSFMLEntity(DummyEntity* pSFMLEntity, int x, int y);
 
 public:
 	void OnInitialize() override;

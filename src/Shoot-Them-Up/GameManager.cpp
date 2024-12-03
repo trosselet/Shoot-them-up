@@ -1,11 +1,8 @@
 #include "pch.h"
 #include "GameManager.h"
 
-#include "Entity.h"
+#include "SFMLEntity.h"
 #include "Debug.h"
-
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
 
 #include <iostream>
 
@@ -30,18 +27,18 @@ GameManager::~GameManager()
 	delete mpWindow;
 	delete mpScene;
 
-	for (Entity* entity : mEntities)
+	for (SFMLEntity* SFMLEntity : mEntities)
 	{
-		delete entity;
+		delete SFMLEntity;
 	}
 }
 
-void GameManager::CreateWindow(unsigned int width, unsigned int height, const char* title, int fpsLimit)
+void GameManager::Initialize(unsigned int width, unsigned int height, const std::string& title)
 {
 	_ASSERT(mpWindow == nullptr);
 
 	mpWindow = new sf::RenderWindow(sf::VideoMode(width, height), title);
-	mpWindow->setFramerateLimit(fpsLimit);
+	mpWindow->setFramerateLimit(60);
 
 	mWindowWidth = width;
 	mWindowHeight = height;
@@ -52,10 +49,9 @@ void GameManager::Run()
 	if (mpWindow == nullptr) 
 	{
 		std::cout << "Window not created, creating default window" << std::endl;
-		CreateWindow(1280, 720, "Default window");
+		Initialize(1280, 720, "Default window");
 	}
 
-	//#TODO : Load somewhere else
 	bool fontLoaded = mFont.loadFromFile("../../../res/Hack-Regular.ttf");
 	_ASSERT(fontLoaded);
 
@@ -95,7 +91,7 @@ void GameManager::Update()
     //Update
     for (auto it = mEntities.begin(); it != mEntities.end(); )
     {
-		Entity* entity = *it;
+		SFMLEntity* entity = *it;
 
         entity->Update();
 
@@ -116,12 +112,12 @@ void GameManager::Update()
         ++it2;
         for (; it2 != mEntities.end(); ++it2)
         {
-            Entity* entity = *it1;
-            Entity* otherEntity = *it2;
+            SFMLEntity* entity = *it1;
+            SFMLEntity* otherEntity = *it2;
 
             if (entity->IsColliding(otherEntity))
             {
-                entity->OnCollision(otherEntity);
+				entity->OnCollision(otherEntity);
                 otherEntity->OnCollision(entity);
             }
         }
@@ -146,9 +142,9 @@ void GameManager::Draw()
 {
 	mpWindow->clear();
 	
-	for (Entity* entity : mEntities)
+	for (SFMLEntity* SFMLEntity : mEntities)
 	{
-		mpWindow->draw(*entity->GetShape());
+		mpWindow->draw(*SFMLEntity->GetShape());
 	}
 	
 	Debug::Get()->Draw(mpWindow);

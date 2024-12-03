@@ -1,75 +1,21 @@
 #pragma once
 
-#include <SFML/System/Vector2.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
-
-namespace sf 
-{
-	class Shape;
-    class Color;
-}
-
-class Scene;
+class SFMLEntity;
 
 class Entity
 {
-    struct Target 
-    {
-		sf::Vector2i position;
-        float distance;
-		bool isSet;
-    };
-
-protected:
-    sf::CircleShape mShape;
-    sf::Vector2f mDirection;
-	Target mTarget;
-    float mSpeed;
-    bool mToDestroy;
-    int mTag;
-
 public:
-	bool GoToDirection(int x, int y, float speed = -1.f);
-    bool GoToPosition(int x, int y, float speed = -1.f);
-    void SetPosition(float x, float y, float ratioX = 0.5f, float ratioY = 0.5f);
-	void SetDirection(float x, float y, float speed = -1.f);
-	void SetSpeed(float speed) { mSpeed = speed; }
-	void SetTag(int tag) { mTag = tag; }
-	float GetRadius() const { return mShape.getRadius(); }
+	Entity() = default;
 
-    sf::Vector2f GetPosition(float ratioX = 0.5f, float ratioY = 0.5f) const;
-	sf::Shape* GetShape() { return &mShape; }
+	virtual bool GoToDirection(int x, int y, float speed = -1.f) = 0;
+	virtual bool GoToPosition(int x, int y, float speed = -1.f) = 0;
+	virtual void SetPosition(float x, float y, float ratioX = 0.5f, float ratioY = 0.5f) = 0;
+	virtual void SetDirection(float x, float y, float speed = -1.f) = 0;
+	virtual float GetRadius() const = 0;
 
-	bool IsTag(int tag) const { return mTag == tag; }
-    bool IsColliding(Entity* other) const;
-	bool IsInside(float x, float y) const;
-
-	void Destroy() { mToDestroy = true; }
-	bool ToDestroy() const { return mToDestroy; }
-	
 	template<typename T>
-	T* GetScene() const;
+	T* GetPosition(float ratioX = 0.5f, float ratioY = 0.5f) const = 0;
 
-    Scene* GetScene() const;
-	float GetDeltaTime() const;
+	virtual bool IsColliding(SFMLEntity* other) const = 0;
 
-    template<typename T>
-    T* CreateEntity(float radius, const sf::Color& color);
-
-protected:
-    Entity() = default;
-    ~Entity() = default;
-
-    virtual void OnUpdate() {};
-    virtual void OnCollision(Entity* collidedWith) {};
-	virtual void OnInitialize() {};
-	
-private:
-    void Update();
-	void Initialize(float radius, const sf::Color& color);
-
-    friend class GameManager;
-    friend Scene;
 };
-
-#include "Entity.inl"

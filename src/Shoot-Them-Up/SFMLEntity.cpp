@@ -21,9 +21,26 @@ void SFMLEntity::Initialize(float radius, int r, int g, int b, int a)
 	mTarget.isSet = false;
 }
 
-bool SFMLEntity::IsColliding(SFMLEntity* other) const
+std::pair<float, float> SFMLEntity::GetPosition(float ratioX, float ratioY) const
 {
-	sf::Vector2f distance = GetPosition<sf::Vector2f>(0.5f, 0.5f) - other->GetPosition<sf::Vector2f>(0.5f, 0.5f);
+	float size = mShape.getRadius() * 2.0f;
+	sf::Vector2f position = mShape.getPosition();
+	position.x += size * ratioX;
+	position.y += size * ratioY;
+
+	return { position.x, position.y };
+}
+
+sf::Vector2f SFMLEntity::GetPosition() const
+{
+	sf::Vector2f position = sf::Vector2f(GetPosition(0.5, 0.5).first, GetPosition(0.5, 0.5).second);
+	return position;
+}
+
+bool SFMLEntity::IsColliding(Entity* pOther) const
+{
+	SFMLEntity* other = dynamic_cast<SFMLEntity*>(pOther);
+	sf::Vector2f distance = GetPosition() - other->GetPosition();
 
 	float sqrLength = (distance.x * distance.x) + (distance.y * distance.y);
 
@@ -35,9 +52,10 @@ bool SFMLEntity::IsColliding(SFMLEntity* other) const
 	return sqrLength < sqrRadius;
 }
 
+
 bool SFMLEntity::IsInside(float x, float y) const
 {
-	sf::Vector2f position = GetPosition<sf::Vector2f>(0.5f, 0.5f);
+	sf::Vector2f position = GetPosition();
 
 	float dx = x - position.x;
 	float dy = y - position.y;
@@ -62,7 +80,7 @@ bool SFMLEntity::GoToDirection(int x, int y, float speed)
 	if (speed > 0)
 		mSpeed = speed;
 
-	sf::Vector2f position = GetPosition<sf::Vector2f>(0.5f, 0.5f);
+	sf::Vector2f position = GetPosition();
 	sf::Vector2f direction = sf::Vector2f(x - position.x, y - position.y);
 
 	bool success = Utils::Normalize(direction);
@@ -79,7 +97,7 @@ bool SFMLEntity::GoToPosition(int x, int y, float speed)
 	if (GoToDirection(x, y, speed) == false)
 		return false;
 
-	sf::Vector2f position = GetPosition<sf::Vector2f>(0.5f, 0.5f);
+	sf::Vector2f position = GetPosition();
 
 	mTarget.position = { x, y };
 	mTarget.distance = Utils::GetDistance(position.x, position.y, x, y);
@@ -126,4 +144,14 @@ Scene* SFMLEntity::GetScene() const
 float SFMLEntity::GetDeltaTime() const
 {
 	return GameManager::Get()->GetDeltaTime();
+}
+
+void SFMLEntity::Destroy()
+{
+	mToDestroy = true;
+}
+
+bool SFMLEntity::ToDestroy() const
+{
+	return mToDestroy;
 }

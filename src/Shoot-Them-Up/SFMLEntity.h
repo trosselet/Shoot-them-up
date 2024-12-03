@@ -1,12 +1,7 @@
 #pragma once
 
 #include "Entity.h"
-
-namespace sf
-{
-    class Shape;
-    class Color;
-}
+#include <SFML/Graphics.hpp>
 
 class Scene;
 
@@ -19,7 +14,7 @@ class SFMLEntity : public Entity
         bool isSet;
     };
 
-protected:
+private:
     sf::CircleShape mShape;
     sf::Vector2f mDirection;
     Target mTarget;
@@ -32,39 +27,41 @@ public:
     bool GoToPosition(int x, int y, float speed = -1.f) override;
     void SetPosition(float x, float y, float ratioX = 0.5f, float ratioY = 0.5f) override;
     void SetDirection(float x, float y, float speed = -1.f) override;
-    void SetSpeed(float speed) { mSpeed = speed; }
-    void SetTag(int tag) { mTag = tag; }
     float GetRadius() const override { return mShape.getRadius(); }
 
-    template<typename T>
-    T GetPosition(float ratioX = 0.5f, float ratioY = 0.5f) const;
+    std::pair<float, float> GetPosition(float ratioX, float ratioY) const override;
+    sf::Vector2f GetPosition() const;
 
-    template<typename T>
-    T* GetShape() { return &mShape; }
+    bool IsColliding(Entity* other) const override;
+    bool IsInside(float x, float y) const override;
 
-    bool IsTag(int tag) const { return mTag == tag; }
-    bool IsColliding(SFMLEntity* other) const;
-    bool IsInside(float x, float y) const;
+    void Destroy() override;
+    bool ToDestroy() const override;
 
-    void Destroy() { mToDestroy = true; }
-    bool ToDestroy() const { return mToDestroy; }
+    int GetTag() const override { return mTag; }
+    void SetTag(int tag) override { mTag = tag; }
 
     template<typename T>
     T* GetScene() const;
 
+    template<typename T>
+    T CreateSFMLEntity(float radius, int r, int g, int b, int a);
+
+
+    sf::CircleShape* GetShape() { return &mShape; }
+    template<typename T>
+    T* GetShape();
+
     Scene* GetScene() const;
     float GetDeltaTime() const;
-
-    template<typename T>
-    T* CreateSFMLEntity(float radius, int r, int g, int b, int a);
 
 protected:
     SFMLEntity() = default;
     ~SFMLEntity() = default;
 
-    virtual void OnUpdate() {};
-    virtual void OnCollision(SFMLEntity* collidedWith) {};
-    virtual void OnInitialize() {};
+    virtual void OnUpdate() {}
+    virtual void OnCollision(SFMLEntity* collidedWith) {}
+    virtual void OnInitialize() {}
 
 private:
     void Update();
@@ -73,5 +70,3 @@ private:
     friend class GameManager;
     friend Scene;
 };
-
-#include "SFMLEntity.inl"

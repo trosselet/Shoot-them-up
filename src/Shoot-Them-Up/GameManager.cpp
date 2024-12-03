@@ -142,9 +142,9 @@ void GameManager::Draw()
 {
 	mpWindow->clear();
 	
-	for (SFMLEntity* SFMLEntity : mEntities)
+	for (SFMLEntity* entity : mEntities)
 	{
-		mpWindow->draw(*SFMLEntity->GetShape());
+		mpWindow->draw(*entity->GetShape());
 	}
 	
 	Debug::Get()->Draw(mpWindow);

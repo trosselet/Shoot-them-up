@@ -81,6 +81,8 @@ bool Entity::GoToDirection(int x, int y, float speed)
 		return false;
 
 	mDirection = direction;
+	
+
 
 	return true;
 }
@@ -138,3 +140,4 @@ float Entity::GetDeltaTime() const
 {
 	return GameManager::Get()->GetDeltaTime();
 }
+

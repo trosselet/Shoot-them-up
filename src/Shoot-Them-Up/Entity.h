@@ -55,6 +55,7 @@ public:
 
     template<typename T>
     T* CreateEntity(float radius, const sf::Color& color);
+    Entity(float radius, const sf::Color& color);
 
 protected:
     Entity() = default;
@@ -63,6 +64,7 @@ protected:
     virtual void OnUpdate() {};
     virtual void OnCollision(Entity* collidedWith) {};
 	virtual void OnInitialize() {};
+    virtual void CheckWindow() {};
 	
 private:
     void Update();
